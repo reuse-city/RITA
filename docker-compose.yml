@@ -1,7 +1,20 @@
-# docker-compose.yml
-version: '3.8'
-
 services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/rita
+      - ENVIRONMENT=development
+    depends_on:
+      db:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+    command: ["./scripts/start.sh"]
+
   frontend:
     build: ./frontend
     ports:
@@ -11,19 +24,7 @@ services:
       - /app/node_modules
     environment:
       - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
-
-  backend:
-    build: ./backend
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./backend:/app
-    environment:
-      - ENVIRONMENT=development
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/rita
-    depends_on:
-      - db
+    command: npm run dev
 
   db:
     image: postgres:15
@@ -35,6 +36,24 @@ services:
       - POSTGRES_DB=rita
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:11434/api/tags || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
+  ollama_data:

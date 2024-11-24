@@ -1,68 +1,68 @@
 # Reuse Intelligent Technical Assistant (RITA)
 
-RITA is an open-source AI assistant designed to augment repair professionals and enthusiasts, promoting reuse and circular economy principles while fostering social inclusion and environmental awareness.
+RITA is an AI-powered assistant designed to support repair professionals and communities in promoting reuse and circular economy practices.
 
-## Purpose
+## Current Status
+- Basic chat interface implemented
+- Integration with Ollama using Orca-mini model
+- Focuses on repair and reuse guidance
 
-RITA aims to:
-- Augment human expertise (not replace it)
-- Connect users with existing repair resources
-- Promote environmental awareness and social inclusion
-- Build and share repair knowledge
+## Architecture
 
-## Target Users
+### Backend (FastAPI)
+- Location: `/backend`
+- Key Components:
+  - Chat Service (`/src/services/ai_assistant/llm.py`)
+  - API Routes (`/src/api/routes/chat.py`)
+  - Configuration (`/src/core/config.py`)
 
-- Repair professionals
-- Repair café volunteers
-- Social enterprise managers
-- Environmental initiatives
-- Aspiring repair technicians
-- Retired professionals
-- Community organizers
+### Frontend (Next.js)
+- Location: `/frontend`
+- Key Components:
+  - Chat Interface (`/src/components/Chat/ChatInterface.tsx`)
+  - Main Page (`/src/pages/index.tsx`)
 
-## Key Features
-
-- AI-powered repair assistance
-- Knowledge source integration
-- Community collaboration tools
-- Environmental impact tracking
+### Infrastructure
+- Docker-based deployment
+- Uses Ollama for local LLM hosting
+- Orca-mini model (chosen for lower memory requirements)
 
 ## Development Setup
 
-1. Clone the repository:
+### Prerequisites
+- Docker and Docker Compose
+- Git
+- 4GB+ available memory
+
+### Quick Start
 ```bash
+# Clone repository
 git clone https://github.com/reuse-city/rita.git
 cd rita
+
+# Start services
+docker compose up --build
 ```
 
-2. Set up the development environment:
-```bash
-# Backend setup
-cd backend
-python -m venv venv
-source venv/bin/activate  # or `venv\Scripts\activate` on Windows
-pip install -r requirements.txt
+Access:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
+- API Documentation: http://localhost:8000/docs
 
-# Frontend setup
-cd ../frontend
-npm install
-```
-
-3. Start the development servers:
-```bash
-# Start backend
-cd backend
-uvicorn src.main:app --reload
-
-# Start frontend (in another terminal)
-cd frontend
-npm run dev
-```
+## Key Decisions
+1. **LLM Choice**: Using Orca-mini instead of larger models due to memory constraints
+2. **Architecture**: Microservices architecture with Docker for easy deployment
+3. **Focus**: Emphasizing repair knowledge and sustainability in AI responses
 
 ## Contributing
-
-See [CONTRIBUTING.md](docs/community/CONTRIBUTING.md) for guidelines.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## License
+GNU Affero General Public License v3.0
 
-GNU Affero General Public License v3.0 - see [LICENSE](LICENSE)
+## Project Vision
+RITA aims to augment (not replace) human expertise in repair and reuse, promoting sustainable practices and knowledge sharing within the repair community.

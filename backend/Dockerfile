@@ -1,22 +1,23 @@
-FROM python:3.9-slim
+FROM python:3.9
 
 WORKDIR /app
 
-# Install system dependencies including PostgreSQL client and curl
-RUN apt-get update && apt-get install -y \
-    gcc \
-    postgresql-client \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+# Install PostgreSQL client
+RUN apt-get update && apt-get install -y postgresql-client
 
-# Copy requirements first to leverage Docker cache
+# Copy requirements first for better caching
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the start script first and make it executable
+COPY scripts/start.sh /app/scripts/start.sh
+RUN chmod +x /app/scripts/start.sh
 
 # Copy the rest of the application
 COPY . .
 
-# Make sure scripts are executable
+# Make sure the script is still executable after copying everything
 RUN chmod +x /app/scripts/start.sh
 
-# Command is specified in docker-compose.yml
+# Use bash to run the script
+CMD ["bash", "/app/scripts/start.sh"]

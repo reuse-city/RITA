@@ -20,7 +20,21 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
 .env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Alembic
+alembic/versions/
 
 # Node
 node_modules/
@@ -42,6 +56,10 @@ build/
 # Docker
 .docker/
 docker-compose.override.yml
+
+# System
+.DS_Store
+Thumbs.db
 
 # Project specific
 ollama_data/

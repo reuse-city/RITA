@@ -1,67 +1,34 @@
-from fastapi import APIRouter, HTTPException, Depends
+# backend/src/api/routes/chat.py
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-from typing import List, Optional
-from ...services.ai_assistant.llm import LLMService
-from sqlalchemy.orm import Session
-from ...core.database import get_db
-from ...models.knowledge import KnowledgeSource
+from typing import Optional
 import logging
 
-router = APIRouter()
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)  # Set to DEBUG level
-llm_service = LLMService()
+router = APIRouter()
 
 class ChatMessage(BaseModel):
-    message: str
+    content: str
+    role: str = "user"
 
-class Reference(BaseModel):
-    url: str
-    title: str
-    source: str
+class ChatResponse(BaseModel):
+    response: str
+    error: Optional[str] = None
 
-@router.post("/")
-async def chat(message: ChatMessage, db: Session = Depends(get_db)):
-    """Process a chat message and return a response."""
+@router.post("/chat", response_model=ChatResponse)
+async def chat(message: ChatMessage):
+    """
+    Chat endpoint that processes user messages.
+    """
     try:
-        logger.debug(f"Received chat message: {message.message}")
-
-        # First check if Ollama is available
-        is_model_ready = await llm_service.check_model_status()
-        if not is_model_ready:
-            logger.error("Ollama model is not ready")
-            return {
-                "response": "I'm still initializing. Please try again in a moment.",
-                "references": []
-            }
-
-        # Generate response
-        logger.debug("Generating response...")
-        response = await llm_service.generate_response(message.message)
-        logger.debug(f"Generated response: {response[:100]}...")  # Log first 100 chars
-
-        # Get references
-        try:
-            sources = db.query(KnowledgeSource).limit(3).all()
-            references = [
-                {
-                    "url": source.url,
-                    "title": source.name,
-                    "source": source.type
-                } for source in sources
-            ]
-        except Exception as e:
-            logger.error(f"Error fetching references: {e}")
-            references = []
-
-        return {
-            "response": response,
-            "references": references
-        }
-
+        # For now, just echo back the message
+        return ChatResponse(
+            response=f"Echo: {message.content}",
+            error=None
+        )
     except Exception as e:
-        logger.exception("Error in chat endpoint")
-        return {
-            "response": f"I encountered an error: {str(e)}. Please try again.",
-            "references": []
-        }
+        logger.error(f"Error in chat endpoint: {str(e)}")
+        return ChatResponse(
+            response="",
+            error="An error occurred processing your message"
+        )

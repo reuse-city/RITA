@@ -28,6 +28,12 @@ rm -rf frontend/src/components/Knowledge
 rm -rf frontend/src/types
 rm -rf frontend/src/pages/knowledge
 
+echo "Cleaning Python cache files..."
+find . -type d -name "__pycache__" -exec rm -r {} +
+find . -type f -name "*.pyc" -delete
+find . -type f -name "*.pyo" -delete
+find . -type f -name "*.pyd" -delete
+
 # Create necessary directory structure
 echo "Creating directory structure..."
 ensure_dir backend/src/api/routes
@@ -72,7 +78,21 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
 .env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Alembic
+alembic/versions/
 
 # Node
 node_modules/
@@ -95,6 +115,10 @@ build/
 .docker/
 docker-compose.override.yml
 
+# System
+.DS_Store
+Thumbs.db
+
 # Project specific
 ollama_data/
 postgres_data/
@@ -108,4 +132,3 @@ Next steps:
 1. Review the cleaned up structure
 2. Run 'docker compose down -v' to remove old volumes
 3. Run 'docker compose up --build' to rebuild with clean structure"
-

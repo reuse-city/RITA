@@ -1,66 +1,17 @@
 # Python
 __pycache__/
 *.py[cod]
-*$py.class
-*.so
-.Python
-env/
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-
-# Virtual Environment
+*.class
 venv/
-ENV/
-env/
 .env
 
 # IDE
-.idea/
 .vscode/
-*.swp
-*.swo
-
-# Alembic
-alembic/versions/
-
-# Node
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.next/
-out/
-build/
-.DS_Store
-*.pem
-
-# IDEs
 .idea/
-.vscode/
-*.swp
-*.swo
-
-# Docker
-.docker/
-docker-compose.override.yml
-
-# System
-.DS_Store
-Thumbs.db
 
 # Project specific
-ollama_data/
-postgres_data/
+app/static/images/*
+!app/static/images/.gitkeep
+
+# Keep images directory but ignore contents
+touch app/static/images/.gitkeep
